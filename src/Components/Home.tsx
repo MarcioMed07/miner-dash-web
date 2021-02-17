@@ -3,6 +3,9 @@ import { Bar, ChartData } from 'react-chartjs-2';
 import chartjs from 'chart.js'
 import Miners from '../Interfaces/Miners';
 
+const currencies = Object.freeze({"usd":0, "brl":1, "eth":2});
+let currency = currencies.eth;
+
 export default function Home(){
     const [miners, setMiners] = useState<Miners>({});
     useEffect(() => {
@@ -65,18 +68,50 @@ function propChart(miners:Miners){
     </>)
 }
 
+function changeCurrency(){
+    switch (currency){
+        case currencies.usd:
+            currency = currencies.brl;
+            break;
+        case currencies.brl:
+                currency = currencies.eth;
+            break;
+        case currencies.eth:
+                currency = currencies.usd;
+            break;
+    }
+    //setChart(dindinChart(miners)) o que eu queria fazer, mas naturalemnte nao da
+}
+
 function dindinChart(miners:Miners){
-    const prop = "Dindin"
+    
+    let currString = "";
+    const prop = ["Dindin", "DindinBRL", "ETH"] as const;
+
+    switch (currency){
+        case currencies.usd:
+                currString = " (USD)";
+            break;
+        case currencies.brl:
+                currString = " (BRL)";
+            break;
+        case currencies.eth:
+                currString = " (ETH)";
+            break;
+    }
+    
+
     let data:ChartData<chartjs.ChartData> = {
-        labels: Object.keys(miners).sort((a,b)=>miners[b][prop]-miners[a][prop]),
+        labels: Object.keys(miners).sort((a,b)=>miners[b][prop[currency]]-miners[a][prop[currency]]),
         datasets: [
             {
-                label: prop,
-                data: Object.values(miners).map(m=>m[prop]).sort((a,b)=>b-a)
+                label: prop[currency] + currString,
+                data: Object.values(miners).map(m=>m[prop[currency]]).sort((a,b)=>b-a)
             }
         ]
     }
     return(<>
+        <button type="button" onClick={changeCurrency}>Mudar Moeda</button> 
         <Bar
             data={data}
             options={{ maintainAspectRatio: false }}
@@ -90,8 +125,8 @@ function hashrateChart(miners:Miners){
         labels: Object.keys(miners).sort((a,b)=>miners[b][prop]-miners[a][prop]),
         datasets: [
             {
-                label: prop,
-                data: Object.values(miners).map(m=>m[prop]).sort((a,b)=>b-a)
+                label: prop + " (Mh/s)",
+                data: Object.values(miners).map(m=>m[prop]).sort((a,b)=>b-a).map(a => {return a/1e6})
             }
         ]
     }
