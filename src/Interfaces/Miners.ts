@@ -5,5 +5,7 @@ export default interface Miners{
 export interface MinerData{
     Proporcao: number,
     Dindin: number,
+    DindinBRL: number,
+    ETH: number,
     HashRateMedio: number
 }
