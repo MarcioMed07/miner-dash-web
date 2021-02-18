@@ -3,6 +3,7 @@ import { Bar, ChartData } from 'react-chartjs-2';
 import chartjs from 'chart.js'
 import Miners from '../Interfaces/Miners';
 import { Box, Button, Card, CircularProgress, Icon, Tab, Tabs, Typography } from '@material-ui/core';
+import "chartjs-plugin-datalabels";
 
 const currencies = Object.freeze({ "usd": 0, "brl": 1, "eth": 2 });
 
@@ -138,13 +139,13 @@ function PropChart(props: PropChartProps) {
         return noDataChart()
     }
     const prop = "Proporcao"
-    let data: ChartData<chartjs.ChartData> = {
+    let data = {
         labels: Object.keys(miners).sort((a, b) => miners[b][prop] - miners[a][prop]),
         datasets: [
             {
                 backgroundColor: getChartColor(Object.keys(miners).length),
                 label: prop,
-                data: Object.values(miners).map(m => m[prop]).sort((a, b) => b - a)
+                data: Object.values(miners).map(m => m[prop]).sort((a, b) => b - a),
             }
         ]
     }
@@ -155,6 +156,18 @@ function PropChart(props: PropChartProps) {
                 maintainAspectRatio: true,
                 legend: {
                     display: false
+                },
+                plugins: {
+                    datalabels: {
+                        color: 'white',
+                        font: {
+                            weight: 'bold'
+                        },
+                        align: "center",
+                        anchor: "center",
+                        clamp:true,
+                        formatter: (v) => Math.round(v * 1000)/10 + "%"
+                    }
                 }
             }}
         />
@@ -207,6 +220,22 @@ function DindinChart(props: DinDinChartProps) {
                         maintainAspectRatio: true,
                         legend: {
                             display: false
+                        },
+                        plugins: {
+                            datalabels: {
+                                color: 'white',
+                                font: {
+                                    weight: 'bold'
+                                },
+                                align: "center",
+                                anchor: "center",
+                                clamp:true,                               
+                                formatter: (v) => {
+                                    return (currency === currencies.eth?
+                                        Math.round(v*100000)/100000:
+                                        Math.round(v*100)/100 + currString[currency])
+                                }
+                            }
                         }
                     }}
                 />
@@ -237,6 +266,18 @@ function HashrateChart(props: PropChartProps) {
                 maintainAspectRatio: true,
                 legend: {
                     display: false
+                },
+                plugins: {
+                    datalabels: {
+                        color: 'white',
+                        font: {
+                            weight: 'bold'
+                        },
+                        align: "center",
+                        anchor: "center",
+                        clamp:true,
+                        formatter: (v) => Math.round(v * 100)/100+ " (Mh/s)"
+                    }
                 }
             }}
         />
