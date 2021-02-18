@@ -7,43 +7,45 @@ import {
 	Switch,
 	Route,
 	Link,
-	
+
 } from "react-router-dom";
 import Home from './Components/Home';
+import { AppBar, Box, Button, makeStyles, Toolbar, Typography } from '@material-ui/core';
+
+const useStyles = makeStyles((theme) => ({
+	root: {
+		flexGrow: 1,
+	},
+	menuButton: {
+		marginRight: theme.spacing(2),
+	},
+	title: {
+		flexGrow: 1,
+	}
+}));
 
 function App() {
-  
-  return (
-    <Router>
-					<header>
-						<Link to="/">Miners</Link>
-					</header>
-					<div>
-						<Switch>
-							<Route path="/">
-								<Home />
-							</Route>
-						</Switch>
-					</div>
-			</Router>
-  );
-}
-
-function getMiners(){
-
-}
-
-async function getProfit(){
-  const headers= {
-    
-  }
-  fetch(process.env.REACT_APP_API_URL, headers)
-  .then(response => response.json())
-  .then(data => {
-    console.log(data)
-  })
-  .catch(console.error);
-  return {}
+	const classes = useStyles();
+	return (
+		<Router>
+			<div className={classes.root}>
+				<AppBar position="static">
+					<Toolbar>
+						<Typography variant="h6" className={classes.title}>
+							<Button color="inherit" component={Link} to="/">Miners</Button>
+						</Typography>
+					</Toolbar>
+				</AppBar>
+			</div>
+			<Box m={2} p={2} >
+				<Switch>
+					<Route path="/">
+						<Home />
+					</Route>
+				</Switch>
+			</Box  >
+		</Router>
+	);
 }
 
 export default App;
