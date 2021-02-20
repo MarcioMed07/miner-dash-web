@@ -9,3 +9,5 @@ export interface MinerData{
     ETH: number,
     HashRateMedio: number
 }
+
+export enum Currencies { USD = 0, BRL = 1, ETH = 2 }

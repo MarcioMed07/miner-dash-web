@@ -1,13 +1,11 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { Bar, ChartData } from 'react-chartjs-2';
-import chartjs from 'chart.js'
-import Miners from '../Interfaces/Miners';
+
+import Miners, { Currencies } from '../Interfaces/Interfaces';
 import { Box, Button, Card, CircularProgress, Icon, Tab, Tabs, Typography } from '@material-ui/core';
 import "chartjs-plugin-datalabels";
-
-const currencies = Object.freeze({ "usd": 0, "brl": 1, "eth": 2 });
-
-
+import { getProfit } from '../Utils/ApiServices';
+import HomeChart, { ChartType } from './HomeChart';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -42,11 +40,15 @@ function a11yProps(index: any) {
 
 export default function Home() {
     const [miners, setMiners] = useState<Miners>({});
-    useEffect(() => {
-        (async () => { await getProfit(setMiners, setChart); })();
-    }, []);
     const [curChart, setChart] = useState<number>(0)
-    const [currency, setCurrency] = useState<number>(currencies.eth)
+    const [currency, setCurrency] = useState<Currencies>(Currencies.ETH)
+    useEffect(() => {
+        (async () => await getProfit())()
+            .then((miners) => {
+                setMiners(miners);
+                setChart(0)
+            });
+    }, []);
     return (
         <>
             <h2>
@@ -56,230 +58,52 @@ export default function Home() {
                 border: "none",
                 borderTop: "solid 0.1em #333"
             }} />
-            {/* <span>
-                <Button variant="contained" color="primary" onClick={() => setChart(propChart(miners))}>Prop</Button>
-                <Button variant="contained" color="primary" onClick={() => setChart(dindinChart(miners, setChart))}>Dindin</Button>
-                <Button variant="contained" color="primary" onClick={() => setChart(hashrateChart(miners))}>Hashrate</Button>
-            </span> */}
             <div>
-                <Tabs textColor="primary" indicatorColor="primary" value={curChart} onChange={(event, newValue) => { setChart(newValue) }} aria-label="simple tabs example">
-                    <Tab icon={<Icon>pie_chart</Icon>} label="Proporção" {...a11yProps(0)} />
-                    <Tab icon={<Icon>attach_money</Icon>} label="Dindin" {...a11yProps(1)} />
-                    <Tab icon={<Icon>leaderboard</Icon>} label="Hashrate Médio" {...a11yProps(2)} />
+                <Tabs
+                    textColor="primary"
+                    indicatorColor="primary"
+                    value={curChart}
+                    onChange={(event, newValue) => { setChart(newValue) }}
+                    aria-label="simple tabs example">
+                    <Tab icon={<Icon>leaderboard</Icon>} label="Hashrate Médio" {...a11yProps(0)} />
+                    <Tab icon={<Icon>pie_chart</Icon>} label="Proporção" {...a11yProps(1)} />
+                    <Tab icon={<Icon>attach_money</Icon>} label="Dindin" {...a11yProps(2)} />
                 </Tabs>
+                <div style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginBottom: "20px"
+                }}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => { changeCurrency(currency, setCurrency); }}
+                    >
+                        <Icon>swap_horiz</Icon>
+                        {currString(currency)}
+                    </Button>
+                </div>
                 <TabPanel value={curChart} index={0}>
-                    <PropChart miners={miners} />
+                    <HomeChart type={ChartType.Hashrate} miners={miners} currency={currency} />
                 </TabPanel>
                 <TabPanel value={curChart} index={1}>
-                    <DindinChart miners={miners} currency={currency} setCurrency={setCurrency} />
+                    <HomeChart type={ChartType.Prop} miners={miners} currency={currency} />
                 </TabPanel>
                 <TabPanel value={curChart} index={2}>
-                    <HashrateChart miners={miners} />
+                    <HomeChart type={ChartType.Dindin} miners={miners} currency={currency} />
                 </TabPanel>
             </div>
         </>
     )
 }
 
-async function getProfit(setMiners: Function, setChart: Function): Promise<Miners> {
-    const headers = {
-    }
-    return fetch(process.env.REACT_APP_API_URL + 'miners/profitDB', headers)
-        .then(response => response.json())
-        .then<Miners>(data => {
-            const treatedData: Miners = formatData(data)
-            setMiners(treatedData);
-            setChart(0)
-            return treatedData
-        })
-}
-
-function formatData(data: any): Miners {
-    return data
-}
-
-function noDataChart() {
-    return (
-        <div style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "50vh"
-        }}>
-
-            <CircularProgress />
-        </div>
-    )
-}
-
-function getChartColor(entries: number) {
-    let colors: string[] = []
-    for (let i = 0; i < entries; i++) {
-        colors.push(
-            i == 0 ? "rgb(212,175,55)" :
-                i == 1 ? "rgb(192,192,192)" :
-                    i == 2 ? "rgb(205,127,50)" :
-                        "rgb(178,190,181)"
-        )
-    }
-    return colors
-}
 
 function changeCurrency(currency: number, setCurrency: Function) {
-    setCurrency(currency + 1 >= Object.values(currencies).length ? 0 : currency + 1)
+    setCurrency(currency + 1 >= Object.keys(Currencies).length / 2 ? 0 : currency + 1)
 }
 
 
-interface PropChartProps {
-    miners: Miners
-}
-function PropChart(props: PropChartProps) {
-    let { miners } = props
-    if (Object.values(miners).length == 0) {
-        return noDataChart()
-    }
-    const prop = "Proporcao"
-    let data = {
-        labels: Object.keys(miners).sort((a, b) => miners[b][prop] - miners[a][prop]),
-        datasets: [
-            {
-                backgroundColor: getChartColor(Object.keys(miners).length),
-                label: prop,
-                data: Object.values(miners).map(m => m[prop]).sort((a, b) => b - a),
-            }
-        ]
-    }
-    return (<>
-        <Bar
-            data={data}
-            options={{
-                maintainAspectRatio: true,
-                legend: {
-                    display: false
-                },
-                plugins: {
-                    datalabels: {
-                        color: 'white',
-                        font: {
-                            weight: 'bold'
-                        },
-                        align: "center",
-                        anchor: "center",
-                        clamp:true,
-                        formatter: (v) => Math.round(v * 1000)/10 + "%"
-                    }
-                }
-            }}
-        />
-    </>)
-}
-
-interface DinDinChartProps {
-    miners: Miners, currency: number, setCurrency: Function
-}
-function DindinChart(props: DinDinChartProps) {
-    let { miners, currency, setCurrency } = props
-    if (Object.values(miners).length == 0) {
-        return noDataChart()
-    }
-    const currString = [" (USD)", " (BRL)", " (ETH)"];
-    const prop = ["Dindin", "DindinBRL", "ETH"] as const;
-
-
-    let data: ChartData<chartjs.ChartData> = {
-        labels: Object.keys(miners).sort((a, b) => miners[b][prop[currency]] - miners[a][prop[currency]]),
-        datasets: [
-            {
-                backgroundColor: getChartColor(Object.keys(miners).length),
-                label: "Dindin" + currString[currency],
-                data: Object.values(miners).map(m => m[prop[currency]]).sort((a, b) => b - a)
-            }
-        ]
-    }
-    return (
-        <>
-            <div style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "flex-end",
-                marginBottom: "20px"
-            }}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => { changeCurrency(currency, setCurrency); }}
-                >
-                    <Icon>swap_horiz</Icon>
-                    {currString[currency]}
-                </Button>
-            </div>
-            <div>
-                <Bar
-                    data={data}
-                    options={{
-                        maintainAspectRatio: true,
-                        legend: {
-                            display: false
-                        },
-                        plugins: {
-                            datalabels: {
-                                color: 'white',
-                                font: {
-                                    weight: 'bold'
-                                },
-                                align: "center",
-                                anchor: "center",
-                                clamp:true,                               
-                                formatter: (v) => {
-                                    return (currency === currencies.eth?
-                                        Math.round(v*100000)/100000:
-                                        Math.round(v*100)/100 + currString[currency])
-                                }
-                            }
-                        }
-                    }}
-                />
-            </div>
-        </>)
-}
-
-function HashrateChart(props: PropChartProps) {
-    let { miners } = props
-    if (Object.values(miners).length == 0) {
-        return noDataChart()
-    }
-    const prop = "HashRateMedio"
-    let data: ChartData<chartjs.ChartData> = {
-        labels: Object.keys(miners).sort((a, b) => miners[b][prop] - miners[a][prop]),
-        datasets: [
-            {
-                backgroundColor: getChartColor(Object.keys(miners).length),
-                label: prop + " (Mh/s)",
-                data: Object.values(miners).map(m => m[prop]).sort((a, b) => b - a).map(a => { return a / 1e6 })
-            }
-        ]
-    }
-    return (
-        <Bar
-            data={data}
-            options={{
-                maintainAspectRatio: true,
-                legend: {
-                    display: false
-                },
-                plugins: {
-                    datalabels: {
-                        color: 'white',
-                        font: {
-                            weight: 'bold'
-                        },
-                        align: "center",
-                        anchor: "center",
-                        clamp:true,
-                        formatter: (v) => Math.round(v * 100)/100+ " (Mh/s)"
-                    }
-                }
-            }}
-        />
-    )
-}
+function currString(c:Currencies) {
+    return [" (USD)", " (BRL)", " (ETH)"][c]
+} 
