@@ -8,7 +8,8 @@ import "chartjs-plugin-datalabels";
 export enum ChartType {
     Prop,
     Dindin,
-    Hashrate
+    Hashrate,
+    Payout
 }
 
 export interface HomeChartProps {
@@ -33,6 +34,8 @@ export default function HomeChart(props: HomeChartProps) {
                     return <HashrateChart miners={miners} />
                 case ChartType.Dindin:
                     return <DindinChart miners={miners} currency={currency} />
+                case ChartType.Payout:
+                    return <PayoutsChart miners={miners} currency={currency} />
             }
         })()}
     </>
@@ -174,6 +177,42 @@ function HashrateChart(props: ChartProps) {
         ]
     }
     let { height, options } = chartOptions((v: any) => Math.round(v * 100) / 100 + " (Mh/s)")
+    return (
+        <Bar
+            data={data}
+            height={height}
+            options={options}
+        />
+    )
+}
+
+function PayoutsChart(props: ChartProps) {
+    if (props.currency === null || props.currency === undefined) {
+        return <div>Chart Error, no Currency</div>
+    }
+    let { miners, currency } = props
+    if (Object.values(miners).length == 0) {
+        return noDataChart()
+    }
+    const currString = [" (USD)", " (BRL)", " (ETH)"];
+    const prop = ["Dindin", "DindinBRL", "ETH"] as const;
+
+
+    let data: ChartData<chartjs.ChartData> = {
+        labels: Object.keys(miners).sort((a, b) => miners[b][prop[currency]] - miners[a][prop[currency]]),
+        datasets: [
+            {
+                backgroundColor: getChartColor(Object.keys(miners).length),
+                label: "Dindin" + currString[currency],
+                data: Object.values(miners).map(m => m[prop[currency]]).sort((a, b) => b - a)
+            }
+        ]
+    }
+    let { height, options } = chartOptions((v) => {
+        return (currency === Currencies.ETH ?
+            Math.round(v * 100000) / 100000 :
+            Math.round(v * 100) / 100 + currString[currency])
+    })
     return (
         <Bar
             data={data}

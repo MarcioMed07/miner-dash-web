@@ -68,6 +68,7 @@ export default function Home() {
                     <Tab icon={<Icon>leaderboard</Icon>} label="Hashrate Médio" {...a11yProps(0)} />
                     <Tab icon={<Icon>pie_chart</Icon>} label="Proporção" {...a11yProps(1)} />
                     <Tab icon={<Icon>attach_money</Icon>} label="Dindin" {...a11yProps(2)} />
+                    <Tab icon={<Icon>archive</Icon>} label="Payouts" {...a11yProps(3)} />
                 </Tabs>
                 <div style={{
                     width: "100%",
@@ -92,6 +93,9 @@ export default function Home() {
                 </TabPanel>
                 <TabPanel value={curChart} index={2}>
                     <HomeChart type={ChartType.Dindin} miners={miners} currency={currency} />
+                </TabPanel>
+                <TabPanel value={curChart} index={3}>
+                    <HomeChart type={ChartType.Payout} miners={miners} currency={currency} />
                 </TabPanel>
             </div>
         </>
