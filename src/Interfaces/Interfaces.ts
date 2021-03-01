@@ -1,3 +1,13 @@
+export interface Payout{
+    [key: string]: PayoutData
+}
+
+interface PayoutData{
+    BRL: number,
+    ETH: number,
+    USD: number
+}
+
 export default interface Miners{
     [key: string]: MinerData
 }

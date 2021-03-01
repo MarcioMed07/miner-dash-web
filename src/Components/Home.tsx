@@ -1,10 +1,10 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { Bar, ChartData } from 'react-chartjs-2';
 
-import Miners, { Currencies } from '../Interfaces/Interfaces';
+import Miners, { Currencies, Payout } from '../Interfaces/Interfaces';
 import { Box, Button, Card, CircularProgress, Icon, Tab, Tabs, Typography } from '@material-ui/core';
 import "chartjs-plugin-datalabels";
-import { getProfit } from '../Utils/ApiServices';
+import { getAllPayouts, getProfit } from '../Utils/ApiServices';
 import HomeChart, { ChartType } from './HomeChart';
 
 interface TabPanelProps {
@@ -40,13 +40,20 @@ function a11yProps(index: any) {
 
 export default function Home() {
     const [miners, setMiners] = useState<Miners>({});
+    const [payouts, setPayouts] = useState<Payout[]>([])
     const [curChart, setChart] = useState<number>(0)
     const [currency, setCurrency] = useState<Currencies>(Currencies.ETH)
     useEffect(() => {
-        (async () => await getProfit())()
-            .then((miners) => {
-                setMiners(miners);
-                setChart(0)
+        (async () => {
+                let profit_p = getProfit()
+                let payouts_p = getAllPayouts()
+                return await Promise.all([profit_p, payouts_p])
+            }
+            )()
+            .then((response) => {
+                setMiners(response[0]);
+                setPayouts(response[1])
+                setChart(3)
             });
     }, []);
     return (
@@ -74,7 +81,7 @@ export default function Home() {
                     width: "100%",
                     display: "flex",
                     justifyContent: "flex-end",
-                    marginBottom: "20px"
+                    margin: "20px 0"
                 }}>
                     <Button
                         variant="contained"
@@ -86,16 +93,16 @@ export default function Home() {
                     </Button>
                 </div>
                 <TabPanel value={curChart} index={0}>
-                    <HomeChart type={ChartType.Hashrate} miners={miners} currency={currency} />
+                    <HomeChart type={ChartType.Hashrate} miners={miners} currency={currency} payouts={payouts}/>
                 </TabPanel>
                 <TabPanel value={curChart} index={1}>
-                    <HomeChart type={ChartType.Prop} miners={miners} currency={currency} />
+                    <HomeChart type={ChartType.Prop} miners={miners} currency={currency} payouts={payouts}/>
                 </TabPanel>
                 <TabPanel value={curChart} index={2}>
-                    <HomeChart type={ChartType.Dindin} miners={miners} currency={currency} />
+                    <HomeChart type={ChartType.Dindin} miners={miners} currency={currency} payouts={payouts}/>
                 </TabPanel>
                 <TabPanel value={curChart} index={3}>
-                    <HomeChart type={ChartType.Payout} miners={miners} currency={currency} />
+                    <HomeChart type={ChartType.Payout} miners={miners} currency={currency} payouts={payouts}/>
                 </TabPanel>
             </div>
         </>

@@ -1,7 +1,7 @@
 import React, { Context, useEffect, useReducer, useState } from 'react';
-import { Bar, ChartData } from 'react-chartjs-2';
-import chartjs from 'chart.js'
-import Miners, { Currencies } from '../Interfaces/Interfaces';
+import { Bar, ChartData, HorizontalBar } from 'react-chartjs-2';
+import chartjs, { ChartTooltipItem } from 'chart.js'
+import Miners, { Currencies, Payout } from '../Interfaces/Interfaces';
 import { Box, Button, Card, CircularProgress, Icon, Tab, Tabs, Typography } from '@material-ui/core';
 import "chartjs-plugin-datalabels";
 
@@ -15,16 +15,17 @@ export enum ChartType {
 export interface HomeChartProps {
     miners: Miners,
     type: ChartType,
-    currency: Currencies
+    currency: Currencies,
+    payouts: Payout[]
 }
 
 
 interface ChartProps {
-    miners: Miners, currency?: number
+    miners: Miners, currency?: number, payouts?: Payout[]
 }
 
 export default function HomeChart(props: HomeChartProps) {
-    let { miners, type, currency } = props;
+    let { miners, type, currency, payouts } = props;
     return (<>
         {(() => {
             switch (type) {
@@ -35,7 +36,7 @@ export default function HomeChart(props: HomeChartProps) {
                 case ChartType.Dindin:
                     return <DindinChart miners={miners} currency={currency} />
                 case ChartType.Payout:
-                    return <PayoutsChart miners={miners} currency={currency} />
+                    return <PayoutsChart miners={miners} payouts={payouts} currency={currency} />
             }
         })()}
     </>
@@ -56,7 +57,7 @@ function noDataChart() {
     )
 }
 
-function getChartColor(entries: number) {
+function getChartBorderColor(entries: number) {
     let colors: string[] = []
     for (let i = 0; i < entries; i++) {
         colors.push(
@@ -64,6 +65,19 @@ function getChartColor(entries: number) {
                 i == 1 ? "rgb(192,192,192)" :
                     i == 2 ? "rgb(205,127,50)" :
                         "rgb(178,190,181)"
+        )
+    }
+    return colors
+}
+
+function getChartColor(entries: number) {
+    let colors: string[] = []
+    for (let i = 0; i < entries; i++) {
+        colors.push(
+            i == 0 ? "rgba(212,175,55,0.8)" :
+                i == 1 ? "rgba(192,192,192,0.8)" :
+                    i == 2 ? "rgba(205,127,50,0.8)" :
+                        "rgba(178,190,181,0.8)"
         )
     }
     return colors
@@ -187,34 +201,65 @@ function HashrateChart(props: ChartProps) {
 }
 
 function PayoutsChart(props: ChartProps) {
-    if (props.currency === null || props.currency === undefined) {
+    if (props.currency == null || !props.payouts) {
         return <div>Chart Error, no Currency</div>
     }
-    let { miners, currency } = props
+    let { miners, currency, payouts } = props
     if (Object.values(miners).length == 0) {
         return noDataChart()
     }
+
     const currString = [" (USD)", " (BRL)", " (ETH)"];
-    const prop = ["Dindin", "DindinBRL", "ETH"] as const;
+    const prop = ["USD", "BRL", "ETH"] as const;
+
+    let orderedPayouts = payouts.map(t=>{
+        let obj:any[] = []
+        for(let [key, value] of Object.entries<any>(t)){
+            value['miner'] = key
+            obj.push(value)
+        }
+        return obj.sort((a,b)=>{
+            return payouts.reduce((acc,cur)=>acc+cur[b.miner]['BRL'],0) - payouts.reduce((acc,cur)=>acc+cur[a.miner]['BRL'],0)
+        })
+    })
 
 
     let data: ChartData<chartjs.ChartData> = {
-        labels: Object.keys(miners).sort((a, b) => miners[b][prop[currency]] - miners[a][prop[currency]]),
-        datasets: [
-            {
+        labels: orderedPayouts[0].map(t=>t.miner),
+        datasets: orderedPayouts.map(payout=>{
+
+        
+         return    {
                 backgroundColor: getChartColor(Object.keys(miners).length),
+                borderColor: getChartBorderColor(Object.keys(miners).length),
+                borderWidth: 3,
                 label: "Dindin" + currString[currency],
-                data: Object.values(miners).map(m => m[prop[currency]]).sort((a, b) => b - a)
+                data: payout.map(m => m[prop[currency]])
             }
-        ]
+        })
     }
     let { height, options } = chartOptions((v) => {
-        return (currency === Currencies.ETH ?
-            Math.round(v * 100000) / 100000 :
-            Math.round(v * 100) / 100 + currString[currency])
+        return ''
     })
+    options['scales'] = {
+        xAxes: [{
+            stacked: true
+        }],
+        yAxes: [{
+            stacked: true
+        }]
+    }
+    options.tooltips = {
+        mode: "label",
+        callbacks:{
+            footer: (item: chartjs.ChartTooltipItem[], data: chartjs.ChartData)=>{
+                
+                return 'Soma: ' + item.reduce((acc,cur)=>acc+Number(cur.xLabel),0)
+            }
+        }
+    }
     return (
-        <Bar
+        <HorizontalBar
             data={data}
             height={height}
             options={options}
