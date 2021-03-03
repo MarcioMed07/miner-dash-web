@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/miner-dash-web/static/css/main.8c8b27cf.chunk.css",
+    "main.js": "/miner-dash-web/static/js/main.0e572bab.chunk.js",
+    "main.js.map": "/miner-dash-web/static/js/main.0e572bab.chunk.js.map",
+    "runtime-main.js": "/miner-dash-web/static/js/runtime-main.aa4cf37d.js",
+    "runtime-main.js.map": "/miner-dash-web/static/js/runtime-main.aa4cf37d.js.map",
+    "static/js/2.f0eb1fd7.chunk.js": "/miner-dash-web/static/js/2.f0eb1fd7.chunk.js",
+    "static/js/2.f0eb1fd7.chunk.js.map": "/miner-dash-web/static/js/2.f0eb1fd7.chunk.js.map",
+    "static/js/3.536eb08b.chunk.js": "/miner-dash-web/static/js/3.536eb08b.chunk.js",
+    "static/js/3.536eb08b.chunk.js.map": "/miner-dash-web/static/js/3.536eb08b.chunk.js.map",
+    "index.html": "/miner-dash-web/index.html",
+    "static/css/main.8c8b27cf.chunk.css.map": "/miner-dash-web/static/css/main.8c8b27cf.chunk.css.map",
+    "static/js/2.f0eb1fd7.chunk.js.LICENSE.txt": "/miner-dash-web/static/js/2.f0eb1fd7.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/miner-dash-web/static/media/logo.6ce24c58.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.aa4cf37d.js",
+    "static/js/2.f0eb1fd7.chunk.js",
+    "static/css/main.8c8b27cf.chunk.css",
+    "static/js/main.0e572bab.chunk.js"
+  ]
+}
