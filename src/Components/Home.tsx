@@ -53,7 +53,7 @@ export default function Home() {
             .then((response) => {
                 setMiners(response[0]);
                 setPayouts(response[1])
-                setChart(3)
+                setChart(0)
             });
     }, []);
     return (

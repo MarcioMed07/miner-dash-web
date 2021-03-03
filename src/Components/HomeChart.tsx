@@ -258,6 +258,10 @@ function PayoutsChart(props: ChartProps) {
             }
         }
     }
+    options.title = {
+        text: "Soma Geral: " + orderedPayouts.reduce((acc,cur)=>acc+cur.reduce((a,c)=>a+c[prop[currency]],0),0) + currString[currency],
+        display: true
+    }
     return (
         <HorizontalBar
             data={data}
