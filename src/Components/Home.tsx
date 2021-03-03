@@ -6,6 +6,7 @@ import { Box, Button, Card, CircularProgress, Icon, Tab, Tabs, Typography } from
 import "chartjs-plugin-datalabels";
 import { getAllPayouts, getProfit } from '../Utils/ApiServices';
 import HomeChart, { ChartType } from './HomeChart';
+import HomeTable from './HomeTable';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -104,6 +105,9 @@ export default function Home() {
                 <TabPanel value={curChart} index={3}>
                     <HomeChart type={ChartType.Payout} miners={miners} currency={currency} payouts={payouts}/>
                 </TabPanel>
+                <div>
+                    <HomeTable miners={miners} currency={currency} payouts={payouts} />
+                </div>
             </div>
         </>
     )

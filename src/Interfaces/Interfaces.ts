@@ -13,6 +13,7 @@ export default interface Miners{
 }
 
 export interface MinerData{
+    Name?:string,
     Proporcao: number,
     Dindin: number,
     DindinBRL: number,
