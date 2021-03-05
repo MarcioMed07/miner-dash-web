@@ -3,27 +3,9 @@ import React, { useEffect, useState } from "react";
 import Miners, { Currencies, MinerData, Payout } from "../Interfaces/Interfaces";
 
 const useStyles = makeStyles({
-    table: {
-        
+    table: {        
         minWidth: 650,
-    },
-    '@global': {
-        "*::-webkit-scrollbar": {
-            width: "10px",
-            height: "10px"
-        },        
-        "*::-webkit-scrollbar-track": {
-            boxShadow: "inset 0 0 2px grey",
-            borderRadius: "10px",
-        },
-        "*::-webkit-scrollbar-thumb": {
-            background: "rgba(0,0,0,0.2)",
-            borderRadius: "10px",
-        },
-        "*::-webkit-scrollbar-thumb:hover": {
-            background: "rgba(0,0,0,0.6)",
-        },
-      }
+    }
 });
 
 interface PayoutData {

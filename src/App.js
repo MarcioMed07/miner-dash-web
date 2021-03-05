@@ -15,6 +15,24 @@ import { AppBar, Box, Button, Checkbox, makeStyles, Modal, Toolbar, Typography }
 import ReactMarkdown from 'react-markdown';
 
 const useStyles = makeStyles((theme) => ({
+	
+    '@global': {
+        "*::-webkit-scrollbar": {
+            width: "5px",
+            height: "5px"
+        },        
+        "*::-webkit-scrollbar-track": {
+            boxShadow: "inset 0 0 2px grey",
+            borderRadius: "10px",
+        },
+        "*::-webkit-scrollbar-thumb": {
+            background: "rgba(0,0,0,0.2)",
+            borderRadius: "10px",
+        },
+        "*::-webkit-scrollbar-thumb:hover": {
+            background: "rgba(0,0,0,0.6)",
+        },
+      },
 	root: {
 		flexGrow: 1,
 	},
