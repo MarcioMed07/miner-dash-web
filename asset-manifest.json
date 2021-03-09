@@ -1,24 +1,24 @@
 {
   "files": {
     "main.css": "/miner-dash-web/static/css/main.8c8b27cf.chunk.css",
-    "main.js": "/miner-dash-web/static/js/main.6dc42917.chunk.js",
-    "main.js.map": "/miner-dash-web/static/js/main.6dc42917.chunk.js.map",
+    "main.js": "/miner-dash-web/static/js/main.885a3305.chunk.js",
+    "main.js.map": "/miner-dash-web/static/js/main.885a3305.chunk.js.map",
     "runtime-main.js": "/miner-dash-web/static/js/runtime-main.dae692da.js",
     "runtime-main.js.map": "/miner-dash-web/static/js/runtime-main.dae692da.js.map",
-    "static/js/2.ee83fc60.chunk.js": "/miner-dash-web/static/js/2.ee83fc60.chunk.js",
-    "static/js/2.ee83fc60.chunk.js.map": "/miner-dash-web/static/js/2.ee83fc60.chunk.js.map",
+    "static/js/2.a3cf1635.chunk.js": "/miner-dash-web/static/js/2.a3cf1635.chunk.js",
+    "static/js/2.a3cf1635.chunk.js.map": "/miner-dash-web/static/js/2.a3cf1635.chunk.js.map",
     "static/js/3.a98c473b.chunk.js": "/miner-dash-web/static/js/3.a98c473b.chunk.js",
     "static/js/3.a98c473b.chunk.js.map": "/miner-dash-web/static/js/3.a98c473b.chunk.js.map",
     "index.html": "/miner-dash-web/index.html",
     "static/css/main.8c8b27cf.chunk.css.map": "/miner-dash-web/static/css/main.8c8b27cf.chunk.css.map",
-    "static/js/2.ee83fc60.chunk.js.LICENSE.txt": "/miner-dash-web/static/js/2.ee83fc60.chunk.js.LICENSE.txt",
-    "static/media/Changelog.46462122.md": "/miner-dash-web/static/media/Changelog.46462122.md",
+    "static/js/2.a3cf1635.chunk.js.LICENSE.txt": "/miner-dash-web/static/js/2.a3cf1635.chunk.js.LICENSE.txt",
+    "static/media/Changelog.63dd9a6a.md": "/miner-dash-web/static/media/Changelog.63dd9a6a.md",
     "static/media/logo.6ce24c58.svg": "/miner-dash-web/static/media/logo.6ce24c58.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.dae692da.js",
-    "static/js/2.ee83fc60.chunk.js",
+    "static/js/2.a3cf1635.chunk.js",
     "static/css/main.8c8b27cf.chunk.css",
-    "static/js/main.6dc42917.chunk.js"
+    "static/js/main.885a3305.chunk.js"
   ]
 }
