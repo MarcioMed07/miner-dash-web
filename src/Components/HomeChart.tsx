@@ -212,24 +212,50 @@ function PayoutsChart(props: ChartProps) {
     const currString = [" (USD)", " (BRL)", " (ETH)"];
     const prop = ["USD", "BRL", "ETH"] as const;
 
-    let orderedPayouts = payouts.map(t=>{
-        let obj:any[] = []
-        for(let [key, value] of Object.entries<any>(t)){
+    let orderedPayouts = payouts.map(t => {
+        let obj: any[] = []
+
+        for (let key of Object.keys(miners)) {
+            let value: any = {}
+            if (t[key]) {
+                value = t[key]
+            } else {
+                value = {
+                    BRL: 0,
+                    ETH: 0,
+                    USD: 0
+                }
+            }
             value['miner'] = key
             obj.push(value)
         }
-        return obj.sort((a,b)=>{
-            return payouts.reduce((acc,cur)=>acc+cur[b.miner]['BRL'],0) - payouts.reduce((acc,cur)=>acc+cur[a.miner]['BRL'],0)
+        return obj.sort((a, b) => {
+            return (
+                payouts.reduce((acc, cur) => {
+                    if (cur[b.miner]) {
+                        return acc + cur[b.miner]['BRL']
+                    }
+                    return acc + 0
+                }
+                    , 0)
+                - payouts.reduce((acc, cur) => {
+                    if (cur[a.miner]) {
+                        return acc + cur[a.miner]['BRL']
+                    }
+                    return acc
+                }
+                    , 0)
+            )
         })
     })
 
 
     let data: ChartData<chartjs.ChartData> = {
-        labels: orderedPayouts[0].map(t=>t.miner),
-        datasets: orderedPayouts.map(payout=>{
+        labels: orderedPayouts[0]?.map(t => t.miner),
+        datasets: orderedPayouts.map(payout => {
 
-        
-         return    {
+
+            return {
                 backgroundColor: getChartColor(Object.keys(miners).length),
                 borderColor: getChartBorderColor(Object.keys(miners).length),
                 borderWidth: 3,
@@ -251,15 +277,15 @@ function PayoutsChart(props: ChartProps) {
     }
     options.tooltips = {
         mode: "label",
-        callbacks:{
-            footer: (item: chartjs.ChartTooltipItem[], data: chartjs.ChartData)=>{
-                
-                return 'Soma: ' + item.reduce((acc,cur)=>acc+Number(cur.xLabel),0)
+        callbacks: {
+            footer: (item: chartjs.ChartTooltipItem[], data: chartjs.ChartData) => {
+
+                return 'Soma: ' + item.reduce((acc, cur) => acc + Number(cur.xLabel), 0)
             }
         }
     }
     options.title = {
-        text: "Soma Geral: " + orderedPayouts.reduce((acc,cur)=>acc+cur.reduce((a,c)=>a+c[prop[currency]],0),0) + currString[currency],
+        text: "Soma Geral: " + orderedPayouts.reduce((acc, cur) => acc + cur.reduce((a, c) => a + c[prop[currency]], 0), 0) + currString[currency],
         display: true
     }
     return (

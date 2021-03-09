@@ -1,13 +1,16 @@
-## [0.2.7] - 2021-03-05
+## [0.2.9] - 2021-03-09
+🔄 Aba de Payouts adaptada para receber novos mineradores
+
+## [0.2.8] - 2021-03-05
 🔄 Abas scrollaveis  
 
-## [0.2.6] - 2021-03-05
+## [0.2.7] - 2021-03-05
 ✅ Esse Changelog 😊
 
-## [0.2.5] - 2021-03-03
+## [0.2.6] - 2021-03-03
 ✅ Tabela de referencia rápida    
 
-## [0.2.4] - 2021-03-02
+## [0.2.5] - 2021-03-02
 ✅ Soma de Payouts  
 🔄 Aba de Hashrate como principal
 
