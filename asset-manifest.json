@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/miner-dash-web/static/css/main.8c8b27cf.chunk.css",
-    "main.js": "/miner-dash-web/static/js/main.885a3305.chunk.js",
-    "main.js.map": "/miner-dash-web/static/js/main.885a3305.chunk.js.map",
+    "main.css": "/miner-dash-web/static/css/main.7d180cbf.chunk.css",
+    "main.js": "/miner-dash-web/static/js/main.0e145cba.chunk.js",
+    "main.js.map": "/miner-dash-web/static/js/main.0e145cba.chunk.js.map",
     "runtime-main.js": "/miner-dash-web/static/js/runtime-main.dae692da.js",
     "runtime-main.js.map": "/miner-dash-web/static/js/runtime-main.dae692da.js.map",
     "static/js/2.a3cf1635.chunk.js": "/miner-dash-web/static/js/2.a3cf1635.chunk.js",
@@ -10,15 +10,15 @@
     "static/js/3.a98c473b.chunk.js": "/miner-dash-web/static/js/3.a98c473b.chunk.js",
     "static/js/3.a98c473b.chunk.js.map": "/miner-dash-web/static/js/3.a98c473b.chunk.js.map",
     "index.html": "/miner-dash-web/index.html",
-    "static/css/main.8c8b27cf.chunk.css.map": "/miner-dash-web/static/css/main.8c8b27cf.chunk.css.map",
+    "static/css/main.7d180cbf.chunk.css.map": "/miner-dash-web/static/css/main.7d180cbf.chunk.css.map",
     "static/js/2.a3cf1635.chunk.js.LICENSE.txt": "/miner-dash-web/static/js/2.a3cf1635.chunk.js.LICENSE.txt",
-    "static/media/Changelog.63dd9a6a.md": "/miner-dash-web/static/media/Changelog.63dd9a6a.md",
+    "static/media/Changelog.dc3e762c.md": "/miner-dash-web/static/media/Changelog.dc3e762c.md",
     "static/media/logo.6ce24c58.svg": "/miner-dash-web/static/media/logo.6ce24c58.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.dae692da.js",
     "static/js/2.a3cf1635.chunk.js",
-    "static/css/main.8c8b27cf.chunk.css",
-    "static/js/main.885a3305.chunk.js"
+    "static/css/main.7d180cbf.chunk.css",
+    "static/js/main.0e145cba.chunk.js"
   ]
 }

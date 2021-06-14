@@ -1,3 +1,6 @@
+## [0.2.10] - 2021-06-14
+✅ A soma do Dindin de todo mundo no Payout atual
+
 ## [0.2.9] - 2021-03-09
 🔄 Aba de Payouts adaptada para receber novos mineradores
 
