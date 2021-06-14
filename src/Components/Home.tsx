@@ -14,8 +14,9 @@ const useStyles = makeStyles((theme?: Theme) => ({
     buttonHolder: {
         width: "100%",
         display: "flex",
-        justifyContent: "flex-end",
-        margin: "20px 0"
+        justifyContent: "space-between",
+        margin: "20px 0",
+        alignItems: "center"        
     },
     separator: {
         border: "none",
@@ -40,7 +41,7 @@ function TabPanel(props: TabPanelProps) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
+                    <Typography component={'div'}>{children}</Typography>
                 </Box>
             )}
         </div>
@@ -93,6 +94,7 @@ export default function Home() {
                     <Tab icon={<Icon>archive</Icon>} label="Payouts" {...a11yProps(3)} />
                 </Tabs>
                 <div className={classes.buttonHolder}>
+                    <Sum miners={miners} currency={currency}/>
                     <Button
                         variant="contained"
                         color="primary"
@@ -122,6 +124,22 @@ export default function Home() {
     )
 }
 
+function Sum(props:{miners:Miners, currency: Currencies}){
+    let {miners, currency} = props;
+    console.log(miners);
+    const currString = [" (USD)", " (BRL)", " (ETH)"];
+    const prop = ["Dindin", "DindinBRL", "ETH"] as const;
+    let sum = Object.values(miners).reduce((acc,cur)=>acc+cur[prop[currency]],0)
+    let sumString = (currency === Currencies.ETH ?
+        Math.round(sum * 100000) / 100000 :
+        Math.round(sum * 100) / 100) + currString[currency]
+    console.log(sum)
+    return ( 
+        <div style={{fontWeight: "bold", color:"#3f51b5"}}>
+            Soma Atual: {sumString}
+        </div>
+    )
+}
 
 function changeCurrency(currency: number, setCurrency: Function) {
     setCurrency(currency + 1 >= Object.keys(Currencies).length / 2 ? 0 : currency + 1)
